@@ -1,9 +1,12 @@
 const WebSocket = require('ws');
 
-// Create a WebSocket server
-const server = new WebSocket.Server({ port: 6000 });
+// Use dynamic port for Render or default to 6000
+const port = process.env.PORT || 6000;
 
-console.log('WebSocket server is running on ws://127.0.0.1:6000');
+// Create a WebSocket server
+const server = new WebSocket.Server({ port });
+
+console.log(`WebSocket server is running on ws://0.0.0.0:${port}`);
 
 let client1 = null; // First client
 let client2 = null; // Second client
@@ -47,6 +50,12 @@ server.on('connection', (ws) => {
         console.log(`A client disconnected.`);
         if (ws === client1) client1 = null;
         if (ws === client2) client2 = null;
+
+        // Notify the remaining client
+        const remainingClient = client1 || client2;
+        if (remainingClient && remainingClient.readyState === WebSocket.OPEN) {
+            remainingClient.send('Your opponent has disconnected.');
+        }
     });
 
     ws.on('error', (error) => {

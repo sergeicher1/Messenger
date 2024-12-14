@@ -15,7 +15,8 @@ const rl = readline.createInterface({
     output: process.stdout
 });
 
-const serverAddress = 'ws://127.0.0.1:6000';
+// Dynamic server address (default to localhost for local testing)
+const serverAddress = process.env.WS_SERVER || 'ws://127.0.0.1:6000';
 console.log(`Connecting to server at ${serverAddress}...`);
 
 const client = new WebSocket(serverAddress);
