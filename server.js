@@ -1,5 +1,14 @@
 const WebSocket = require("ws");
+// LOCAL TESTING: 
+// const port = 6001;
+// const serverUrl = "ws://127.0.0.1:6001";
 
+// Create WebSocket server
+// const server = new WebSocket.Server({ host: "127.0.0.1", port });
+
+// console.log(`WebSocket server is running on ${serverUrl}`);
+
+// PROD : 
 // Use dynamic port for Render or default to 6000
 const port = process.env.PORT || 6000;
 // Create a WebSocket server
