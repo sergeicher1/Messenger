@@ -52,7 +52,7 @@
 //     console.error(`WebSocket error: ${error.message}`);
 // });
 
-
+// THIS ONE TO CONNECT TO ONLINE SERVER 
 
 const WebSocket = require('ws');
 const readline = require('readline');
