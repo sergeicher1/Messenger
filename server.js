@@ -66,9 +66,7 @@
 //   });
 // });
 
-
-
-// MULTIPLE CLIENTS 
+// MULTIPLE CLIENTS
 const WebSocket = require("ws");
 
 // Use dynamic port for Render or default to 6000
@@ -85,32 +83,40 @@ server.on("connection", (ws) => {
   // Add new client to the list
   clients.push(ws);
   console.log(`A new client connected. Total clients: ${clients.length}`);
-  
-  ws.send(JSON.stringify({
-    type: 'system',
-    content: `Welcome! There are currently ${clients.length - 1} other users connected.`
-  }));
+
+  ws.send(
+    JSON.stringify({
+      type: "system",
+      content: `Welcome! There are currently ${
+        clients.length - 1
+      } other users connected.`,
+    })
+  );
 
   // Notify all other clients about the new connection
   clients.forEach((client) => {
     if (client !== ws && client.readyState === WebSocket.OPEN) {
-      client.send(JSON.stringify({
-        type: 'system',
-        content: 'A new user has joined the chat.'
-      }));
+      client.send(
+        JSON.stringify({
+          type: "system",
+          content: "A new user has joined the chat.",
+        })
+      );
     }
   });
-
   // Handle incoming messages and broadcast to all other clients
   ws.on("message", (message) => {
     console.log(`Received message: ${message}`);
+
+    // Send the message as JSON to all other clients
+    const outgoingMessage = JSON.stringify({
+      type: "user",
+      sender: "UserX", // Add unique sender identifier here
+      content: message,
+    });
+
     clients.forEach((client) => {
       if (client !== ws && client.readyState === WebSocket.OPEN) {
-        const outgoingMessage = JSON.stringify({
-          type: "user",
-          sender: "UserX", // Add unique sender identifier here
-          content: message,
-        });
         client.send(outgoingMessage);
       }
     });
@@ -129,10 +135,12 @@ server.on("connection", (ws) => {
     // Notify remaining clients
     clients.forEach((client) => {
       if (client.readyState === WebSocket.OPEN) {
-        client.send(JSON.stringify({
-          type: 'system',
-          content: 'A user has disconnected.'
-        }));
+        client.send(
+          JSON.stringify({
+            type: "system",
+            content: "A user has disconnected.",
+          })
+        );
       }
     });
   });
